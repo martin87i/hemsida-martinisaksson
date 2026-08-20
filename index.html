@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Martin Isaksson — Sångare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --linen: #efe9de;
+    --linen-deep: #e4dccb;
+    --ink: #22201c;
+    --ink-soft: #55503f;
+    --wine: #6e2c3b;
+    --wine-deep: #4f1f2b;
+    --brass: #b08d57;
+    --brass-soft: #dcc79a;
+    --muted: #8a8272;
+    --wedding: #a8455a;
+    --christening: #7d8f6b;
+    --funeral: #3c3a52;
+    --radius: 2px;
+    --max: 1120px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  body{
+    margin:0;
+    background:var(--linen);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    font-size:16px;
+    line-height:1.6;
+  }
+
+  a{color:inherit;}
+  :focus-visible{outline:2px solid var(--wine); outline-offset:3px;}
+
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 28px;}
+
+  h1,h2,h3{font-family:'Fraunces', serif; font-weight:500; margin:0; letter-spacing:-0.01em;}
+
+  .eyebrow{
+    font-family:'Work Sans', sans-serif;
+    font-size:0.72rem;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--brass);
+    font-weight:600;
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(239,233,222,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid rgba(34,32,28,0.08);
+  }
+  .header-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 0;
+  }
+  .brand{
+    display:flex; flex-direction:column; line-height:1.1;
+  }
+  .brand-name{font-family:'Fraunces', serif; font-size:1.25rem; font-weight:600;}
+  .brand-role{font-size:0.68rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--brass); margin-top:2px;}
+
+  nav ul{list-style:none; display:flex; gap:32px; margin:0; padding:0;}
+  nav a{
+    text-decoration:none; font-size:0.92rem; font-weight:500;
+    color:var(--ink-soft);
+    position:relative;
+    padding-bottom:4px;
+  }
+  nav a.current{color:var(--ink);}
+  nav a.current::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--wine);
+  }
+  nav a:hover{color:var(--wine);}
+
+  .nav-toggle{display:none; background:none; border:none; cursor:pointer; padding:6px;}
+  .nav-toggle span{display:block; width:22px; height:2px; background:var(--ink); margin:5px 0;}
+
+  @media (max-width:760px){
+    nav{
+      position:absolute; top:100%; left:0; right:0;
+      background:var(--linen); border-bottom:1px solid rgba(34,32,28,0.08);
+      display:none;
+    }
+    nav.open{display:block;}
+    nav ul{flex-direction:column; padding:20px 28px; gap:18px;}
+    .nav-toggle{display:block;}
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{padding:96px 0 72px; position:relative;}
+  .hero .eyebrow{margin-bottom:18px;}
+  .hero h1{
+    font-size:clamp(2.4rem, 5vw, 4.1rem);
+    max-width:14ch;
+    color:var(--ink);
+  }
+  .hero p.lede{
+    max-width:46ch; margin-top:22px; font-size:1.08rem; color:var(--ink-soft);
+  }
+  .hero-actions{display:flex; gap:16px; margin-top:36px; flex-wrap:wrap;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:13px 26px; border-radius:var(--radius);
+    font-size:0.92rem; font-weight:600; text-decoration:none;
+    border:1px solid transparent; cursor:pointer;
+    transition:transform 0.15s ease, background 0.15s ease;
+  }
+  .btn-primary{background:var(--wine); color:var(--linen);}
+  .btn-primary:hover{background:var(--wine-deep); transform:translateY(-1px);}
+  .btn-ghost{border-color:var(--ink); color:var(--ink); background:transparent;}
+  .btn-ghost:hover{background:var(--ink); color:var(--linen);}
+
+  /* ---------- Programme (three occasions) ---------- */
+  .programme{padding:0 0 88px;}
+
+  .cards{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:14px;
+  }
+  @media (max-width:640px){ .cards{gap:8px;} }
+
+  .card{
+    display:block;
+    text-decoration:none; color:var(--ink);
+    position:relative; overflow:hidden;
+    border-radius:16px;
+    border:1px solid rgba(34,32,28,0.1);
+    transition:transform 0.15s ease;
+  }
+  .card:hover{transform:translateY(-2px);}
+  .card::before{
+    content:""; position:absolute; left:0; top:0; bottom:0; width:4px;
+    background:var(--accent, var(--wine)); z-index:2;
+  }
+  .card-image{
+    aspect-ratio:3/4; position:relative;
+    background:linear-gradient(155deg, color-mix(in srgb, var(--accent, var(--wine)) 30%, var(--linen)), var(--linen-deep));
+    display:flex; align-items:flex-start; justify-content:center;
+  }
+  .card-image::after{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0) 45%, rgba(0,0,0,0.05) 100%);
+  }
+  .card .tag{
+    position:relative; z-index:1; margin-top:38%;
+    font-family:'Fraunces', serif; font-weight:500; font-size:clamp(1.15rem, 3.2vw, 1.6rem);
+    color:var(--linen); text-align:center; padding:0 10px;
+    text-shadow:0 2px 10px rgba(0,0,0,0.35);
+  }
+
+  .card--wedding{--accent: var(--wedding);}
+  .card--christening{--accent: var(--christening);}
+  .card--funeral{--accent: var(--funeral);}
+
+  /* ---------- Listen strip ---------- */
+  /* ---------- Availability (ticket stub) ---------- */
+  /* ---------- Repertoar ---------- */
+  .repertoar{padding:88px 0;}
+  .repertoar > .wrap > .eyebrow{margin-bottom:14px;}
+  .repertoar h2{font-size:clamp(1.6rem, 3vw, 2.1rem); max-width:20ch; margin-bottom:44px;}
+
+  .song-columns{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:28px;
+  }
+  @media (max-width:760px){ .song-columns{grid-template-columns:1fr; gap:36px;} }
+
+  .song-col h3{
+    font-family:'Fraunces', serif; font-style:italic; font-weight:500; font-size:1.2rem;
+    color:var(--col-accent, var(--wine)); margin-bottom:14px;
+    padding-bottom:10px; border-bottom:2px solid var(--col-accent, var(--wine));
+  }
+  .song-list{list-style:none; margin:0; padding:0;}
+  .song-row{
+    display:flex; align-items:center; gap:12px;
+    width:100%; text-align:left; background:none; border:none; cursor:pointer;
+    padding:12px 6px; font-family:'Work Sans', sans-serif; font-size:0.95rem; color:var(--ink);
+    border-bottom:1px solid rgba(34,32,28,0.08);
+    transition:background 0.15s ease, padding-left 0.15s ease;
+  }
+  .song-row::before{
+    content:"♪"; color:var(--col-accent, var(--wine)); font-size:0.9rem; flex-shrink:0; opacity:0.6;
+  }
+  .song-row:hover{background:rgba(34,32,28,0.04); padding-left:12px;}
+  .song-row.is-active{
+    background:color-mix(in srgb, var(--col-accent, var(--wine)) 12%, transparent);
+    font-weight:600; padding-left:12px;
+  }
+  .song-row.is-active::before{content:"▶"; opacity:1;}
+
+  .song-row--pending{
+    color:var(--muted); cursor:not-allowed;
+    font-style:italic;
+  }
+  .song-row--pending::before{content:"○"; opacity:0.35;}
+  .song-row--pending:hover{background:none; padding-left:6px;}
+
+  .player-bar{
+    margin-top:44px;
+    display:flex; align-items:center; gap:18px;
+    background:var(--ink); color:var(--linen);
+    border-radius:100px; padding:14px 26px;
+    position:sticky; bottom:20px; z-index:10;
+    box-shadow:0 12px 30px rgba(34,32,28,0.25);
+    flex-wrap:wrap;
+  }
+  .player-btn{
+    display:flex; align-items:center; justify-content:center;
+    width:38px; height:38px; border-radius:50%; border:none; cursor:pointer;
+    background:rgba(239,233,222,0.12); color:var(--linen); flex-shrink:0;
+    transition:background 0.15s ease;
+  }
+  .player-btn svg{width:16px; height:16px;}
+  .player-btn:hover{background:rgba(239,233,222,0.22);}
+  .player-btn--play{background:var(--brass); color:var(--wine-deep);}
+  .player-btn--play:hover{background:var(--brass-soft);}
+
+  .player-info{display:flex; flex-direction:column; min-width:0; flex:1;}
+  .now-playing-label{font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--brass-soft);}
+  .now-playing{font-family:'Fraunces', serif; font-style:italic; font-size:0.98rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+
+  .volume-control{display:flex; align-items:center; gap:8px; flex-shrink:0;}
+  .volume-control svg{width:18px; height:18px; color:var(--brass-soft);}
+  .volume-control input[type="range"]{
+    width:90px; accent-color:var(--brass);
+  }
+
+  @media (max-width:600px){
+    .player-bar{border-radius:20px; justify-content:center;}
+    .player-info{order:3; width:100%; flex:none; text-align:center; margin-top:4px;}
+  }
+
+  .availability{padding:88px 0;}
+  .ticket{
+    display:grid; grid-template-columns:1fr 260px;
+    border:1px solid rgba(34,32,28,0.16);
+    background:var(--linen-deep);
+  }
+  @media (max-width:700px){ .ticket{grid-template-columns:1fr;} }
+  .ticket-main{padding:40px 40px 40px 44px;}
+  .ticket-main .eyebrow{margin-bottom:12px;}
+  .ticket-main p{color:var(--ink-soft); max-width:48ch; margin-top:12px; font-size:0.94rem;}
+  .calendar-embed{
+    margin-top:22px; width:100%; height:420px;
+    border-radius:4px; background:var(--linen);
+  }
+  .ticket-stub{
+    border-left:1px dashed rgba(34,32,28,0.3);
+    padding:40px 30px; display:flex; flex-direction:column; justify-content:center; gap:10px;
+  }
+  .ticket-stub .num{font-family:'Fraunces', serif; font-size:2.4rem; color:var(--wine);}
+  .ticket-stub .label{font-size:0.8rem; color:var(--ink-soft); letter-spacing:0.04em;}
+
+  /* ---------- Footer / contact ---------- */
+  footer{background:var(--wine-deep); color:var(--linen); padding:80px 0 44px;}
+  .footer-top{display:grid; grid-template-columns:1fr 1.2fr; gap:64px;}
+  @media (max-width:820px){ .footer-top{grid-template-columns:1fr; gap:44px;} }
+
+  footer .eyebrow{color:var(--brass-soft);}
+  footer h2{color:var(--linen); font-size:1.9rem; margin-top:14px; max-width:14ch;}
+  footer .footer-note{color:#d8c8b8; font-size:0.92rem; margin-top:18px; max-width:38ch;}
+  footer .phone-note{margin-top:28px; font-size:0.88rem; color:#c9b6a3; border-top:1px solid rgba(239,233,222,0.15); padding-top:20px;}
+
+  form{display:grid; gap:16px;}
+  .form-row{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media (max-width:520px){ .form-row{grid-template-columns:1fr;} }
+
+  label{font-size:0.78rem; letter-spacing:0.05em; text-transform:uppercase; color:#d8c8b8; margin-bottom:6px; display:block;}
+  input, select, textarea{
+    width:100%; background:rgba(239,233,222,0.06); border:1px solid rgba(239,233,222,0.25);
+    color:var(--linen); padding:11px 13px; font-family:'Work Sans', sans-serif; font-size:0.94rem;
+    border-radius:var(--radius);
+  }
+  input::placeholder, textarea::placeholder{color:#a6957f;}
+  textarea{min-height:100px; resize:vertical;}
+  select{appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%23d8c8b8'/></svg>"); background-repeat:no-repeat; background-position:right 14px center; color-scheme:dark;}
+  select option{background:var(--linen); color:var(--ink);}
+
+  .submit-btn{
+    justify-self:start; margin-top:6px; background:var(--brass); color:var(--wine-deep);
+    border:none; padding:13px 30px; font-weight:600; font-size:0.92rem; border-radius:var(--radius); cursor:pointer;
+    transition:background 0.15s ease;
+  }
+  .submit-btn:hover{background:var(--brass-soft);}
+
+  /* Honeypot: off-screen, not display:none, so simple bots that check visibility still fill it in */
+  .hp-field{
+    position:absolute; left:-9999px; top:-9999px;
+    width:1px; height:1px; overflow:hidden;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <div class="brand">
+      <span class="brand-name">Martin Isaksson</span>
+      <span class="brand-role">Sångare</span>
+    </div>
+    <button class="nav-toggle" aria-label="Öppna meny" aria-expanded="false" id="navToggle">
+      <span></span><span></span><span></span>
+    </button>
+    <nav id="mainNav">
+      <ul>
+        <li><a href="#top" class="current">Start</a></li>
+        <li><a href="#brollop-list">Bröllop</a></li>
+        <li><a href="#dop-list">Dop</a></li>
+        <li><a href="#begravning-list">Begravning</a></li>
+        <li><a href="#kontakt">Kontakt</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Sång för livets stora stunder</p>
+      <h1>En röst som bär genom festen, högtiden och stillheten.</h1>
+      <p class="lede">Jag sjunger vid bröllop, dop och begravningar runtom i Uppsala med omnejd — med ett register som möter varje tillfälle där det befinner sig.</p>
+    </div>
+  </section>
+
+  <!-- PROGRAMME -->
+  <section class="programme" id="programme">
+    <div class="wrap">
+      <div class="cards">
+        <a href="#brollop-list" class="card card--wedding">
+          <div class="card-image"><span class="tag">Bröllop</span></div>
+        </a>
+
+        <a href="#dop-list" class="card card--christening">
+          <div class="card-image"><span class="tag">Dop</span></div>
+        </a>
+
+        <a href="#begravning-list" class="card card--funeral">
+          <div class="card-image"><span class="tag">Begravning</span></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- REPERTOAR -->
+  <section class="repertoar" id="repertoar">
+    <div class="wrap">
+      <p class="eyebrow">Repertoar</p>
+      <h2>Lyssna på ett urval, kategori för kategori.</h2>
+
+      <div class="song-columns">
+        <div class="song-col" id="brollop-list" style="--col-accent:var(--wedding)">
+          <h3>Bröllop</h3>
+          <ul class="song-list">
+            <li><button class="song-row song-row--pending" data-title="På gång" data-category="Bröllop" data-src="" disabled>På gång</button></li>
+            <li><button class="song-row song-row--pending" data-title="På gång" data-category="Bröllop" data-src="" disabled>På gång</button></li>
+            <li><button class="song-row song-row--pending" data-title="På gång" data-category="Bröllop" data-src="" disabled>På gång</button></li>
+            <li><button class="song-row song-row--pending" data-title="På gång" data-category="Bröllop" data-src="" disabled>På gång</button></li>
+            <li><button class="song-row song-row--pending" data-title="På gång" data-category="Bröllop" data-src="" disabled>På gång</button></li>
+            <li><button class="song-row song-row--pending" data-title="På gång" data-category="Bröllop" data-src="" disabled>På gång</button></li>
+          </ul>
+        </div>
+
+        <div class="song-col" id="dop-list" style="--col-accent:var(--christening)">
+          <h3>Dop</h3>
+          <ul class="song-list">
+            <li><button class="song-row song-row--pending" data-title="På gång" data-category="Dop" data-src="" disabled>På gång</button></li>
+            <li><button class="song-row song-row--pending" data-title="På gång" data-category="Dop" data-src="" disabled>På gång</button></li>
+            <li><button class="song-row song-row--pending" data-title="På gång" data-category="Dop" data-src="" disabled>På gång</button></li>
+            <li><button class="song-row song-row--pending" data-title="På gång" data-category="Dop" data-src="" disabled>På gång</button></li>
+            <li><button class="song-row song-row--pending" data-title="På gång" data-category="Dop" data-src="" disabled>På gång</button></li>
+            <li><button class="song-row song-row--pending" data-title="På gång" data-category="Dop" data-src="" disabled>På gång</button></li>
+          </ul>
+        </div>
+
+        <div class="song-col" id="begravning-list" style="--col-accent:var(--funeral)">
+          <h3>Begravning</h3>
+          <ul class="song-list">
+            <li><button class="song-row" data-title="Håll mitt hjärta" data-category="Begravning" data-src="audio\begravning\hall-mitt-hjarta.mp3">Håll mitt hjärta</button></li>
+            <li><button class="song-row song-row--pending" data-title="På gång" data-category="Begravning" data-src="" disabled>På gång</button></li>
+            <li><button class="song-row song-row--pending" data-title="På gång" data-category="Begravning" data-src="" disabled>På gång</button></li>
+            <li><button class="song-row song-row--pending" data-title="På gång" data-category="Begravning" data-src="" disabled>På gång</button></li>
+            <li><button class="song-row song-row--pending" data-title="På gång" data-category="Begravning" data-src="" disabled>På gång</button></li>
+            <li><button class="song-row song-row--pending" data-title="På gång" data-category="Begravning" data-src="" disabled>På gång</button></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="player-bar">
+        <button class="player-btn player-btn--play" id="playPauseBtn" aria-label="Spela">
+          <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+        </button>
+        <button class="player-btn" id="stopBtn" aria-label="Stoppa">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z"/></svg>
+        </button>
+
+        <div class="player-info">
+          <span class="now-playing-label">Nu spelas</span>
+          <span class="now-playing" id="nowPlaying">Ingen låt vald</span>
+        </div>
+
+        <div class="volume-control">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 10v4h4l5 5V5L7 10H3z"/></svg>
+          <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.8" aria-label="Volym">
+        </div>
+      </div>
+
+      <audio id="audioPlayer"></audio>
+    </div>
+  </section>
+
+  <!-- AVAILABILITY -->
+  <section class="availability" id="availability">
+    <div class="wrap">
+      <div class="ticket">
+        <div class="ticket-main">
+          <h2>Tillgänglighet</h2>
+          <!-- Byt DITT-KALENDER-ID mot din riktiga kalender-ID från Google Kalenders inställningar -->
+          <iframe class="calendar-embed"
+            src="https://calendar.google.com/calendar/embed?src=qgtp4bfcrcqh8040mol9dgq68s@group.calendar.google.com&ctz=Europe%2FStockholm&mode=WEEK&wkst=2&showTitle=0&showPrint=0&showTabs=0&showCalendars=0"
+            style="border:0" loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER / CONTACT -->
+<footer id="kontakt">
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <p class="eyebrow">Kontakt</p>
+        <h2>Hör av dig, så återkommer jag samma dag.</h2>
+        <p class="footer-note">Fyll i formuläret så landar det direkt i min inkorg — ingen mejladress behöver visas här på sidan.</p>
+        <p class="phone-note">Föredrar du telefon? Numret finns på mitt visitkort.</p>
+      </div>
+
+      <form>
+        <div class="form-row">
+          <div>
+            <label for="namn">Namn</label>
+            <input id="namn" name="namn" type="text" placeholder="För- och efternamn" required>
+          </div>
+          <div>
+            <label for="mejl">Din mejl</label>
+            <input id="mejl" name="mejl" type="email" placeholder="namn@exempel.se" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label for="amne">Ämne</label>
+            <select id="amne" name="amne">
+              <option>Bröllop</option>
+              <option>Dop</option>
+              <option>Begravning</option>
+              <option>Vill bli uppringd</option>
+              <option>Annat</option>
+            </select>
+          </div>
+          <div>
+            <label for="telefon">Telefonnummer</label>
+            <input id="telefon" name="telefon" type="tel" placeholder="07X-XXX XX XX">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label for="datum">Datum (om känt)</label>
+            <input id="datum" name="datum" type="date">
+          </div>
+          <div>
+            <label for="tid">Tidpunkt</label>
+            <input id="tid" name="tid" type="time">
+          </div>
+        </div>
+
+        <div>
+          <label for="meddelande">Meddelande</label>
+          <textarea id="meddelande" name="meddelande" placeholder="Berätta lite om tillfället — plats, tid, önskemål kring låtar..."></textarea>
+        </div>
+
+        <!-- Honeypot: dolt för människor, lockar enkla bottar. Fylls fältet i, kasseras inskicket tyst. -->
+        <div class="hp-field" aria-hidden="true">
+          <label for="foretag">Företag</label>
+          <input id="foretag" name="foretag" type="text" tabindex="-1" autocomplete="off">
+        </div>
+
+        <!-- Cloudflare Turnstile: byt data-sitekey mot din riktiga nyckel vid driftsättning -->
+        <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA" data-theme="dark"></div>
+
+        <button type="submit" class="submit-btn">Skicka förfrågan</button>
+      </form>
+    </div>
+  </div>
+</footer>
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script>
+  const toggle = document.getElementById('navToggle');
+  const nav = document.getElementById('mainNav');
+  toggle.addEventListener('click', () => {
+    const open = nav.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open);
+  });
+
+  // ---- Repertoar-spelare ----
+  const audio = document.getElementById('audioPlayer');
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const playIcon = document.getElementById('playIcon');
+  const pauseIcon = document.getElementById('pauseIcon');
+  const stopBtn = document.getElementById('stopBtn');
+  const nowPlaying = document.getElementById('nowPlaying');
+  const volumeSlider = document.getElementById('volumeSlider');
+  const songRows = document.querySelectorAll('.song-row');
+  let activeRow = null;
+
+  audio.volume = parseFloat(volumeSlider.value);
+
+  function setPlayingUI(isPlaying){
+    playIcon.style.display = isPlaying ? 'none' : 'block';
+    pauseIcon.style.display = isPlaying ? 'block' : 'none';
+    playPauseBtn.setAttribute('aria-label', isPlaying ? 'Pausa' : 'Spela');
+  }
+
+  songRows.forEach(row => {
+    row.addEventListener('click', () => {
+      const title = row.dataset.title;
+      const category = row.dataset.category;
+      const src = row.dataset.src;
+
+      if (activeRow) activeRow.classList.remove('is-active');
+      row.classList.add('is-active');
+      activeRow = row;
+
+      nowPlaying.textContent = `${title} — ${category}`;
+
+      // Byt ut mot riktig mp3-fil via data-src på varje knapp.
+      if (src) {
+        audio.src = src;
+        audio.play();
+        setPlayingUI(true);
+      } else {
+        // Platshållare tills ljudfiler finns på plats.
+        setPlayingUI(true);
+      }
+    });
+  });
+
+  playPauseBtn.addEventListener('click', () => {
+    if (!activeRow) return;
+    if (audio.paused) {
+      if (audio.src) audio.play();
+      setPlayingUI(true);
+    } else {
+      audio.pause();
+      setPlayingUI(false);
+    }
+  });
+
+  stopBtn.addEventListener('click', () => {
+    audio.pause();
+    audio.currentTime = 0;
+    setPlayingUI(false);
+    if (activeRow) activeRow.classList.remove('is-active');
+    activeRow = null;
+    nowPlaying.textContent = 'Ingen låt vald';
+  });
+
+  volumeSlider.addEventListener('input', () => {
+    audio.volume = parseFloat(volumeSlider.value);
+  });
+
+  audio.addEventListener('ended', () => setPlayingUI(false));
+</script>
+
+</body>
+</html>
