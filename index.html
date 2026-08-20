@@ -505,8 +505,8 @@
                         <input id="botcheck" name="botcheck" type="checkbox" tabindex="-1" autocomplete="off">
                     </div>
 
-                    <!-- hCaptcha: delad nyckel för Web3Forms gratisplan — ingen egen hCaptcha-registrering behövs -->
-                    <div class="h-captcha" data-sitekey="50b2fe65-b00b-4b9e-ad62-3ba471098be2" data-theme="dark"></div>
+                    <!-- hCaptcha: Web3Forms zero-config-metod, enligt deras egen dokumentation -->
+                    <div class="h-captcha" data-captcha="true" data-theme="dark"></div>
 
                     <button type="submit" class="submit-btn">Skicka förfrågan</button>
                     <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
@@ -515,7 +515,7 @@
         </div>
     </footer>
 
-    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+    <script src="https://web3forms.com/client/script.js" async defer></script>
     <script>const toggle = document.getElementById('navToggle');
   const nav = document.getElementById('mainNav');
   toggle.addEventListener('click', () => {
@@ -604,6 +604,14 @@
     if (contactForm.botcheck.checked) {
       formStatus.textContent = 'Tack, ditt meddelande är skickat!';
       formStatus.className = 'form-status success';
+      return;
+    }
+
+    // Kontrollera att hCaptcha är ifylld innan vi skickar (enligt Web3Forms dokumentation)
+    const hCaptchaField = contactForm.querySelector('textarea[name="h-captcha-response"]');
+    if (!hCaptchaField || !hCaptchaField.value) {
+      formStatus.textContent = 'Bekräfta gärna att du inte är en robot innan du skickar.';
+      formStatus.className = 'form-status error';
       return;
     }
 
