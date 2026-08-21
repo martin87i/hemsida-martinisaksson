@@ -31,6 +31,10 @@
     *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
   }
 
+    #top {
+        scroll-margin-top: 63px;
+    }
+
   body{
     margin:0;
     background:var(--linen);
@@ -70,8 +74,7 @@
   .brand{
     display:flex; flex-direction:column; line-height:1.1;
   }
-  .brand-name{font-family:'Fraunces', serif; font-size:1.25rem; font-weight:600;}
-  .brand-role{font-size:0.68rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--brass); margin-top:2px;}
+  .brand-tagline{font-family:'Fraunces', serif; font-style:italic; font-weight:500; font-size:1.05rem; color:var(--ink); max-width:22ch;}
 
   nav ul{list-style:none; display:flex; gap:32px; margin:0; padding:0;}
   nav a{
@@ -101,8 +104,10 @@
   }
 
   /* ---------- Hero ---------- */
-  .hero{padding:96px 0 72px; position:relative;}
+  .hero{padding:10px 0 72px; position:relative;}
   .hero .eyebrow{margin-bottom:18px;}
+  .hero-heading{width:fit-content; max-width:100%;}
+  .hero-logo{display:block; margin:10px 130px 5px; height:220px; width:auto;}
   .hero h1{
     font-size:clamp(2.4rem, 5vw, 4.1rem);
     max-width:14ch;
@@ -307,8 +312,7 @@
     <header>
         <div class="wrap header-inner">
             <div class="brand">
-                <span class="brand-name">Martin Isaksson</span>
-                <span class="brand-role">Sångare</span>
+                <span class="brand-tagline">Sång för livets stora stunder</span>
             </div>
             <button class="nav-toggle" aria-label="Öppna meny" aria-expanded="false" id="navToggle">
                 <span></span><span></span><span></span>
@@ -328,8 +332,10 @@
         <!-- HERO -->
         <section class="hero">
             <div class="wrap">
-                <p class="eyebrow">Sång för livets stora stunder</p>
-                <h1>En röst som bär genom festen, högtiden och stillheten.</h1>
+                <div class="hero-heading">
+                    <img class="hero-logo" src="martin_isaksson_logo_header.png" alt="Martin Isaksson — Sångare">
+                    <h1>En röst som bär genom festen, högtiden och stillheten.</h1>
+                </div>
                 <p class="lede">Jag sjunger vid bröllop, dop och begravningar runtom i Uppsala med omnejd — med ett register som möter varje tillfälle där det befinner sig.</p>
             </div>
         </section>
