@@ -187,7 +187,14 @@
     color:var(--col-accent, var(--wine)); margin-bottom:14px;
     padding-bottom:10px; border-bottom:2px solid var(--col-accent, var(--wine));
   }
-  .song-list{list-style:none; margin:0; padding:0;}
+  .song-list{
+    list-style:none; margin:0; padding:0;
+    max-height:270px; overflow-y:auto;
+    scrollbar-width:thin; scrollbar-color:var(--brass) transparent;
+  }
+  .song-list::-webkit-scrollbar{width:6px;}
+  .song-list::-webkit-scrollbar-track{background:transparent;}
+  .song-list::-webkit-scrollbar-thumb{background:var(--brass); border-radius:3px;}
   .song-row{
     display:flex; align-items:center; gap:12px;
     width:100%; text-align:left; background:none; border:none; cursor:pointer;
@@ -216,11 +223,12 @@
     margin-top:44px;
     display:flex; align-items:center; gap:18px;
     background:var(--ink); color:var(--linen);
-    border-radius:100px; padding:14px 26px;
-    position:sticky; bottom:20px; z-index:10;
+    border-radius:24px; padding:16px 26px;
+    position:-webkit-sticky; position:sticky; bottom:20px; z-index:10;
     box-shadow:0 12px 30px rgba(34,32,28,0.25);
     flex-wrap:wrap;
   }
+  .player-controls{display:flex; gap:10px; flex-shrink:0;}
   .player-btn{
     display:flex; align-items:center; justify-content:center;
     width:38px; height:38px; border-radius:50%; border:none; cursor:pointer;
@@ -232,9 +240,21 @@
   .player-btn--play{background:var(--brass); color:var(--wine-deep);}
   .player-btn--play:hover{background:var(--brass-soft);}
 
-  .player-info{display:flex; flex-direction:column; min-width:0; flex:1;}
+  .player-main{display:flex; flex-direction:column; gap:6px; min-width:160px; flex:1;}
+  .player-info{display:flex; flex-direction:column; min-width:0;}
   .now-playing-label{font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--brass-soft);}
   .now-playing{font-family:'Fraunces', serif; font-style:italic; font-size:0.98rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+
+  .waveform-row{display:flex; align-items:center; gap:10px;}
+  .waveform{
+    flex:1; min-width:0; width:100%; height:40px; display:block;
+    cursor:pointer; border-radius:4px;
+  }
+  .time-current, .time-total{
+    font-size:0.7rem; color:var(--brass-soft); flex-shrink:0;
+    font-variant-numeric:tabular-nums; width:2.6em;
+  }
+  .time-current{text-align:right;}
 
   .volume-control{display:flex; align-items:center; gap:8px; flex-shrink:0;}
   .volume-control svg{width:18px; height:18px; color:var(--brass-soft);}
@@ -244,29 +264,23 @@
 
   @media (max-width:600px){
     .player-bar{border-radius:20px; justify-content:center;}
-    .player-info{order:3; width:100%; flex:none; text-align:center; margin-top:4px;}
+    .player-main{order:3; width:100%; flex:none; margin-top:6px;}
+    .player-info{text-align:center;}
   }
 
   .availability{padding:88px 0;}
   .ticket{
-    display:grid; grid-template-columns:1fr 260px;
+    display:grid; grid-template-columns:1fr;
     border:1px solid rgba(34,32,28,0.16);
     background:var(--linen-deep);
   }
-  @media (max-width:700px){ .ticket{grid-template-columns:1fr;} }
-  .ticket-main{padding:40px 40px 40px 44px;}
+  .ticket-main{padding:40px 5% 40px 5%;}
   .ticket-main .eyebrow{margin-bottom:12px;}
   .ticket-main p{color:var(--ink-soft); max-width:48ch; margin-top:12px; font-size:0.94rem;}
   .calendar-embed{
     margin-top:22px; width:100%; height:420px;
     border-radius:4px; background:var(--linen);
   }
-  .ticket-stub{
-    border-left:1px dashed rgba(34,32,28,0.3);
-    padding:40px 30px; display:flex; flex-direction:column; justify-content:center; gap:10px;
-  }
-  .ticket-stub .num{font-family:'Fraunces', serif; font-size:2.4rem; color:var(--wine);}
-  .ticket-stub .label{font-size:0.8rem; color:var(--ink-soft); letter-spacing:0.04em;}
 
   /* ---------- Footer / contact ---------- */
   footer{background:var(--wine-deep); color:var(--linen); padding:80px 0 44px;}
@@ -274,7 +288,7 @@
   @media (max-width:820px){ .footer-top{grid-template-columns:1fr; gap:44px;} }
 
   footer .eyebrow{color:var(--brass-soft);}
-  footer h2{color:var(--linen); font-size:1.9rem; margin-top:14px; max-width:14ch;}
+  footer h2{color:var(--linen); font-size:1.9rem; margin-top:14px;}
   footer .footer-note{color:#d8c8b8; font-size:0.92rem; margin-top:18px; max-width:38ch;}
   footer .phone-note{margin-top:28px; font-size:0.88rem; color:#c9b6a3; border-top:1px solid rgba(239,233,222,0.15); padding-top:20px;}
 
@@ -386,17 +400,26 @@
                 </div>
 
                 <div class="player-bar">
-                    <button class="player-btn player-btn--play" id="playPauseBtn" aria-label="Spela">
-                        <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-                        <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z" /></svg>
-                    </button>
-                    <button class="player-btn" id="stopBtn" aria-label="Stoppa">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z" /></svg>
-                    </button>
+                    <div class="player-controls">
+                        <button class="player-btn player-btn--play" id="playPauseBtn" aria-label="Spela">
+                            <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                            <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z" /></svg>
+                        </button>
+                        <button class="player-btn" id="stopBtn" aria-label="Stoppa">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z" /></svg>
+                        </button>
+                    </div>
 
-                    <div class="player-info">
-                        <span class="now-playing-label">Nu spelas</span>
-                        <span class="now-playing" id="nowPlaying">Ingen låt vald</span>
+                    <div class="player-main">
+                        <div class="player-info">
+                            <span class="now-playing-label">Nu spelas</span>
+                            <span class="now-playing" id="nowPlaying">Ingen låt vald</span>
+                        </div>
+                        <div class="waveform-row">
+                            <span class="time-current" id="timeCurrent">0:00</span>
+                            <canvas class="waveform" id="waveform" height="40" aria-label="Ljudvågform, klicka för att hoppa i låten"></canvas>
+                            <span class="time-total" id="timeTotal">0:00</span>
+                        </div>
                     </div>
 
                     <div class="volume-control">
@@ -417,7 +440,7 @@
                         <h2>Tillgänglighet</h2>
                         <!-- Byt DITT-KALENDER-ID mot din riktiga kalender-ID från Google Kalenders inställningar -->
                         <iframe class="calendar-embed"
-                                src="https://calendar.google.com/calendar/embed?src=qgtp4bfcrcqh8040mol9dgq68s@group.calendar.google.com&ctz=Europe%2FStockholm&mode=WEEK&wkst=2&showTitle=0&showPrint=0&showTabs=0&showCalendars=0"
+                                src="https://calendar.google.com/calendar/embed?src=qgtp4bfcrcqh8040mol9dgq68s@group.calendar.google.com&ctz=Europe%2FStockholm&mode=WEEK&wkst=2&showTitle=0&showPrint=0&showTabs=0&showCalendars=0&hl=sv"
                                 style="border:0" loading="lazy"></iframe>
                     </div>
                 </div>
@@ -432,8 +455,6 @@
                 <div>
                     <p class="eyebrow">Kontakt</p>
                     <h2>Hör av dig, så återkommer jag samma dag.</h2>
-                    <p class="footer-note">Fyll i formuläret så landar det direkt i min inkorg — ingen mejladress behöver visas här på sidan.</p>
-                    <p class="phone-note">Föredrar du telefon? Numret finns på mitt visitkort.</p>
                 </div>
 
                 <form id="contactForm" action="https://api.web3forms.com/submit" method="POST">
@@ -518,6 +539,10 @@
   const nowPlaying = document.getElementById('nowPlaying');
   const volumeSlider = document.getElementById('volumeSlider');
   const songRows = document.querySelectorAll('.song-row');
+  const waveformCanvas = document.getElementById('waveform');
+  const waveformCtx = waveformCanvas.getContext('2d');
+  const timeCurrentEl = document.getElementById('timeCurrent');
+  const timeTotalEl = document.getElementById('timeTotal');
   let activeRow = null;
 
   audio.volume = parseFloat(volumeSlider.value);
@@ -527,6 +552,152 @@
     pauseIcon.style.display = isPlaying ? 'block' : 'none';
     playPauseBtn.setAttribute('aria-label', isPlaying ? 'Pausa' : 'Spela');
   }
+
+  function formatTime(sec){
+    if (!isFinite(sec) || sec < 0) return '0:00';
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  }
+
+  // ---- Vågform ----
+  let audioCtx = null;
+  const peaksCache = new Map();
+  let currentPeaks = null;
+  let currentDuration = null;
+  let waveformLoadToken = 0;
+
+  // audio.duration kan vara Infinity för vissa mp3-filer innan de är helt inlästa,
+  // så vi litar i första hand på den exakta längden från decodeAudioData.
+  function getDuration(){
+    if (currentDuration && isFinite(currentDuration)) return currentDuration;
+    return isFinite(audio.duration) ? audio.duration : 0;
+  }
+
+  function resizeWaveformCanvas(){
+    const rect = waveformCanvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    waveformCanvas.width = Math.max(1, Math.round(rect.width * dpr));
+    waveformCanvas.height = Math.max(1, Math.round(rect.height * dpr));
+    waveformCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function drawWaveform(progress){
+    const rect = waveformCanvas.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    waveformCtx.clearRect(0, 0, width, height);
+
+    if (!currentPeaks || !currentPeaks.length) {
+      waveformCtx.strokeStyle = 'rgba(239,233,222,0.25)';
+      waveformCtx.lineWidth = 2;
+      waveformCtx.beginPath();
+      waveformCtx.moveTo(0, height / 2);
+      waveformCtx.lineTo(width, height / 2);
+      waveformCtx.stroke();
+      return;
+    }
+
+    const barGap = 1.5;
+    const barWidth = width / currentPeaks.length;
+    const playedCount = Math.floor((progress || 0) * currentPeaks.length);
+
+    currentPeaks.forEach((p, i) => {
+      const barHeight = Math.max(2, p * height);
+      const x = i * barWidth;
+      const y = (height - barHeight) / 2;
+      waveformCtx.fillStyle = i < playedCount ? '#b08d57' : 'rgba(239,233,222,0.28)';
+      waveformCtx.fillRect(x, y, Math.max(1, barWidth - barGap), barHeight);
+    });
+  }
+
+  async function loadWaveform(src){
+    const token = ++waveformLoadToken;
+
+    if (peaksCache.has(src)) {
+      const cached = peaksCache.get(src);
+      currentPeaks = cached.peaks;
+      currentDuration = cached.duration;
+      timeTotalEl.textContent = formatTime(cached.duration);
+      drawWaveform(0);
+      return;
+    }
+
+    currentPeaks = null;
+    currentDuration = null;
+    drawWaveform(0);
+
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const response = await fetch(src);
+      const arrayBuffer = await response.arrayBuffer();
+      const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+      if (token !== waveformLoadToken) return; // en annan låt hann väljas under tiden
+
+      const raw = audioBuffer.getChannelData(0);
+      const samples = 140;
+      const blockSize = Math.floor(raw.length / samples) || 1;
+      const peaks = [];
+      for (let i = 0; i < samples; i++) {
+        const start = i * blockSize;
+        let sum = 0;
+        for (let j = 0; j < blockSize; j++) {
+          sum += Math.abs(raw[start + j] || 0);
+        }
+        peaks.push(sum / blockSize);
+      }
+      const max = Math.max(...peaks) || 1;
+      const normalized = peaks.map(p => p / max);
+      peaksCache.set(src, { peaks: normalized, duration: audioBuffer.duration });
+
+      if (token === waveformLoadToken) {
+        currentPeaks = normalized;
+        currentDuration = audioBuffer.duration;
+        timeTotalEl.textContent = formatTime(audioBuffer.duration);
+        const dur = getDuration();
+        drawWaveform(dur ? audio.currentTime / dur : 0);
+      }
+    } catch (err) {
+      // Vågformen gick inte att generera (t.ex. lokal fil utan fetch-stöd) — spelaren funkar ändå.
+      if (token === waveformLoadToken) {
+        currentPeaks = null;
+        currentDuration = null;
+        drawWaveform(0);
+      }
+    }
+  }
+
+  function seekFromClientX(clientX){
+    const dur = getDuration();
+    if (!dur) return;
+    const rect = waveformCanvas.getBoundingClientRect();
+    const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+    audio.currentTime = ratio * dur;
+    drawWaveform(ratio);
+  }
+
+  let isScrubbing = false;
+  waveformCanvas.addEventListener('pointerdown', (e) => {
+    if (!activeRow || !audio.src) return;
+    isScrubbing = true;
+    waveformCanvas.setPointerCapture(e.pointerId);
+    seekFromClientX(e.clientX);
+  });
+  waveformCanvas.addEventListener('pointermove', (e) => {
+    if (!isScrubbing) return;
+    seekFromClientX(e.clientX);
+  });
+  waveformCanvas.addEventListener('pointerup', () => { isScrubbing = false; });
+  waveformCanvas.addEventListener('pointercancel', () => { isScrubbing = false; });
+
+  window.addEventListener('resize', () => {
+    resizeWaveformCanvas();
+    const dur = getDuration();
+    drawWaveform(dur ? audio.currentTime / dur : 0);
+  });
+
+  resizeWaveformCanvas();
+  drawWaveform(0);
 
   songRows.forEach(row => {
     row.addEventListener('click', () => {
@@ -539,14 +710,21 @@
       activeRow = row;
 
       nowPlaying.textContent = `${title} — ${category}`;
+      timeCurrentEl.textContent = '0:00';
+      timeTotalEl.textContent = '0:00';
 
       // Byt ut mot riktig mp3-fil via data-src på varje knapp.
       if (src) {
         audio.src = src;
         audio.play();
         setPlayingUI(true);
+        loadWaveform(src);
       } else {
         // Platshållare tills ljudfiler finns på plats.
+        currentPeaks = null;
+        currentDuration = null;
+        waveformLoadToken++;
+        drawWaveform(0);
         setPlayingUI(true);
       }
     });
@@ -570,10 +748,28 @@
     if (activeRow) activeRow.classList.remove('is-active');
     activeRow = null;
     nowPlaying.textContent = 'Ingen låt vald';
+    timeCurrentEl.textContent = '0:00';
+    timeTotalEl.textContent = '0:00';
+    currentPeaks = null;
+    currentDuration = null;
+    waveformLoadToken++;
+    drawWaveform(0);
   });
 
   volumeSlider.addEventListener('input', () => {
     audio.volume = parseFloat(volumeSlider.value);
+  });
+
+  audio.addEventListener('loadedmetadata', () => {
+    // Endast en fallback — den exakta längden från vågforms-avkodningen (currentDuration) har företräde.
+    if (!currentDuration) timeTotalEl.textContent = formatTime(audio.duration);
+  });
+
+  audio.addEventListener('timeupdate', () => {
+    if (isScrubbing) return;
+    timeCurrentEl.textContent = formatTime(audio.currentTime);
+    const dur = getDuration();
+    drawWaveform(dur ? audio.currentTime / dur : 0);
   });
 
   audio.addEventListener('ended', () => setPlayingUI(false));
